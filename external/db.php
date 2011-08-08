@@ -98,13 +98,14 @@ $wgLBFactoryConf = array(
 	),
 	's6' => array(
 		'db29'     => 0,
-		'db21'     => 100, # temp master, snapshot host
+		'db21'     => 100, # snapshot host
+		'db43'     => 1500
                 #'db19'     => 3000,
-                'db7'     => 1500, 
+                #'db7'     => 1500, # replacing with db43
 	),
 	's7' => array(
 		'db37' => 0,
-		'db18' => 100,
+		'db18' => 50,  # 20110730 - is racking up ECC errors
 		'db16'	=> 1000,
 	),
 ),
@@ -117,7 +118,7 @@ $wgLBFactoryConf = array(
     'type'        => 'mysql',
     'flags'       => DBO_DEFAULT,
     'max lag'     => 30,
-    'max threads' => 200,
+    #'max threads' => 350, -- disabled TS
 ),
 
 'groupLoadsBySection' => array(
@@ -187,6 +188,7 @@ $wgLBFactoryConf = array(
 	'db38'     => '10.0.6.48', # do not remove or comment out
 	'db39'     => '10.0.6.49', # do not remove or comment out
 	'db40'     => '10.0.6.50', # do not remove or comment out
+	'db43'     => '10.0.6.53', # do not remove or comment out
 
 ),
 
@@ -215,9 +217,9 @@ $wgLBFactoryConf = array(
 		'10.0.2.177' => 1,
 	),
 	'cluster6' => array(
-		'10.0.2.154' => 1,
+		#'10.0.2.154' => 1, # shut down, RT 1134
 		'10.0.2.166' => 1,
-		#'10.0.2.178' => 1, # shut down, RT 612
+		'10.0.2.178' => 1,
 	),
 	'cluster7' => array(
 		'10.0.2.155' => 1,
@@ -247,7 +249,7 @@ $wgLBFactoryConf = array(
 	),
 	'cluster21' => array(
 		'10.0.2.161' => 50,
-		'10.0.2.173' => 100,
+		#'10.0.2.173' => 100,
 		'10.0.2.185' => 100,
 	),
 
@@ -299,7 +301,7 @@ $wgLBFactoryConf = array(
 
 'masterTemplateOverrides' => array(
 	# The master generally has more threads running than the others
-	'max threads' => 200,
+	'max threads' => 400,
 ),
 
 'externalTemplateOverrides' => array(
@@ -329,3 +331,7 @@ $wgDBAvgStatusPoll = 30000;
 #$wgLBFactoryConf['readOnlyBySection']['s2'] =
 #$wgLBFactoryConf['readOnlyBySection']['s2a'] =
 #'Emergency maintenance, need more servers up, new estimate ~18:30 UTC';
+
+if ( $wgDBname === 'testwiki' ) {
+	$wgLBFactoryConf['serverTemplate']['max threads'] = 300;
+}
