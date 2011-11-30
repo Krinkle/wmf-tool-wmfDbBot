@@ -3,7 +3,7 @@
 /* Populate from externals */
 
 // http://noc.wikimedia.org/conf/db.php.txt
-// Last update: Krinkle (2011-05-22)
+// Last update: Krinkle (2011-11-30)
 $wdbExternals['db.php'] = wdbLoadPhpFile(
 	"$wdbPath/external/db.php",
 	array( 'wgLBFactoryConf' ),
@@ -12,6 +12,7 @@ $wdbExternals['db.php'] = wdbLoadPhpFile(
 );
 
 // http://noc.wikimedia.org/conf/all.dblist
+// Last update: Krinkle (2011-11-30)
 $wdbExternals['all.dblist'] = wdbLoadFlatFile( "$wdbPath/external/all.dblist" );
 
 
