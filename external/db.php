@@ -66,11 +66,12 @@ $wgLBFactoryConf = array(
 #
 'sectionLoads' => array(
 	's1' => array(
-		'db32'	   => 0,
-		'db36'	   => 400,
-		'db12'		=> 50,
-		'db26'		=> 100, # Snapshot hsot
+		'db36'	   => 0,
+		'db12'		=> 50, # special: watchlist, etc see groupLoadsByDB hardy - rebuild me
+		'db32'		=> 50, # snapshot host
 		'db38'		=> 400, # mysql hung, depooled, repooled with lower load. 20110326 -- mark
+		'db52'		=> 400,
+		'db53'		=> 400,
 	),
 	's2' => array(
 		'db30'	  => 0,
@@ -78,18 +79,19 @@ $wgLBFactoryConf = array(
 		# 'db15'    => 200, # went down 2011-01-12 - mark
 		#'db19'	  => 200, # lots of ecc errors - maintenance - ryan
 		'db24'	  => 100, # Snapshot host
+		'db54'	  => 300, 
 	),
 	's4' => array(
-		'db22'	 => 0,
-		'db31'	 => 100,
-		# 'db5'	  => 100,
+		'db31'	 => 0,
+		'db22'	 => 300,
 		'db33'	  => 100, # Snapshot host
+		'db51'	  => 400,
 	),
 	's5' => array(
 		'db45'	 => 0,
-		'db35'	 => 1000,
+		'db35'	 => 500,
 		'db44'	 => 500, # snapshot host
-		# down # 'db28'		=> 2000, # 5.1..
+		'db55'	  => 1000,
 	),
 	/* s3 */ 'DEFAULT' => array(
 		'db34'	  => 0,
@@ -99,14 +101,15 @@ $wgLBFactoryConf = array(
 	),
 	's6' => array(
 		'db47'	   => 0,
-		'db43'	   => 1000, # master
-		'db46'	   => 500, # snapshot host
-		# 'db7'	   => 1500, # replacing with db43
+		'db43'	   => 1000, # hw died 12/18/2011
+		'db46'	   => 400, # snapshot host
+		'db50'	   => 1000, 
 	),
 	's7' => array(
 		'db16'	=> 0,
-		'db37' => 1000,
-		'db18' => 50,  # 20110730 - is racking up ECC errors
+		'db37' => 600,
+		'db18' => 500,  # 20110730 - is racking up ECC errors
+		'db26'		=> 300, # Snapshot hsot
 	),
 ),
 
@@ -187,13 +190,19 @@ $wgLBFactoryConf = array(
 	'db37'	   => '10.0.6.47', # do not remove or comment out
 	'db38'	   => '10.0.6.48', # do not remove or comment out
 	'db39'	   => '10.0.6.49', # do not remove or comment out
-	'db40'	   => '10.0.6.50', # do not remove or comment out
+	'db40'	   => '10.0.6.50', # do not remove or comment out # Parser cache
 	'db42'	   => '10.0.6.52', # do not remove or comment out # Analytics - NOT FOR PROD
 	'db43'	   => '10.0.6.53', # do not remove or comment out
 	'db44'	   => '10.0.6.54', # do not remove or comment out
 	'db45'	   => '10.0.6.55', # do not remove or comment out
 	'db46'	   => '10.0.6.56', # do not remove or comment out
 	'db47'	   => '10.0.6.57', # do not remove or comment out
+	'db50'	   => '10.0.6.60', # do not remove or comment out
+	'db51'	   => '10.0.6.61', # do not remove or comment out
+	'db52'	   => '10.0.6.62', # do not remove or comment out
+	'db53'	   => '10.0.6.63', # do not remove or comment out
+	'db54'	   => '10.0.6.64', # do not remove or comment out
+	'db55'	   => '10.0.6.65', # do not remove or comment out
 	'db1001'	=> '10.64.0.5', # do not remove or comment out
 	'db1002'	=> '10.64.0.6', # do not remove or comment out
 	'db1003'	=> '10.64.0.7', # do not remove or comment out
@@ -372,7 +381,8 @@ $wgLBFactoryConf = array(
 # This key must exist for the master switch script to work
 'readOnlyBySection' => array(
 # 'DEFAULT' => 'Emergency maintenance in progress',
-# 's1'	   => 'Maintenance in progress, please try again in 5 minutes',
+#	's1'	   => 'Maintenance in progress, please try again in 5 minutes',
+#	's4'	   => 'Maintenance in progress, please try again in 5 minutes',
 ),
 
 );
