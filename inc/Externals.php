@@ -12,6 +12,7 @@ $wdbExternals['db.php'] = wdbLoadPhpFile(
 );
 
 // http://noc.wikimedia.org/conf/all.dblist
+// Last update: Krinkle (2012-02-06)
 $wdbExternals['all.dblist'] = wdbLoadFlatFile( "$wdbPath/external/all.dblist" );
 
 
