@@ -1,7 +1,6 @@
 <?php
 
 // Config
-$wdbPath = __DIR__;
 require_once( "$wdbPath/inc/Defines.php" );
 require_once( "$wdbPath/inc/DefaultConfig.php" );
 require_once( "$wdbPath/LocalConfig.php" );
@@ -10,9 +9,10 @@ require_once( "$wdbPath/LocalConfig.php" );
 $wdbRequiredConfig = array(
 	'wdbPath',
 	'wdbContact',
+	'wdbDefaultSection',
+	'wdbDefaultSectionWiki',
 	'wdbTsDbUser',
 	'wdbTsDbPassword',
-	'wdbDefaultSectionWiki',
 );
 $wdbExternals = array();
 $wdbDatabaseInfo = null;

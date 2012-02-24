@@ -5,24 +5,27 @@
  */
 $wdbVersion = '0.4.1';
 
-// User agent etc.
+// Path to main directory
+$wdbPath = dirname( __DIR__ );
+
+// E-mailadress, right now only used in the user agent for API requests.
 $wdbContact = null;
 
 /**
  * Config for externals
  */
-// Server config: Default section name for wikis without a section or in section 'DEFAULT'
-$wdbDefaultSection = 's3';
+// Server config: Default section name for wikis without a section or in section 'DEFAULT' (e.g. 's3')
+$wdbDefaultSection = null;
 
-// Server config: Any wiki that is in the default section, used to get replag for 'DEFAULT'
+// Server config: Any wiki that is in the default section, used to get replag for 'DEFAULT' (e.g. 'mediawikiwiki')
 $wdbDefaultSectionWiki = null;
 
-// Database access
+// Database access to sql.toolserver.org
 $wdbTsDbUser = null;
 $wdbTsDbPassword = null;
 
 /**
- * Config for IRC bot
+ * Config for interface (defaults to st-out)
  */
 $wdbNickname = 'wmfDbBot';
 

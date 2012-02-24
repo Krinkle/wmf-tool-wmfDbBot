@@ -1,0 +1,10 @@
+* Create a 'replag/info 0.0.0.1' way (get link form ip to db25)
+* 
+
+== 0.5.0 ==
+* Created updateExternals.php maintenance script and logging to
+  logs/updateExternals.log
+* Clean up LocalConfig.php and DefaultConfig.php
+
+== 0.4.1 ==
+* Fixed array_slice in 

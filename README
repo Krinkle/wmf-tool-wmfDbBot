@@ -1,0 +1,3 @@
+* Check the directory out from SVN
+* Make sure you set in LocalSettings:
+-- wdbContact, wdbDefaultSection, wdbDefaultSectionWiki, wdbTsDbUser, wdbTsDbPassword

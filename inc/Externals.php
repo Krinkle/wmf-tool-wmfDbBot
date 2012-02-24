@@ -2,8 +2,6 @@
 
 /* Populate from externals */
 
-// http://noc.wikimedia.org/conf/db.php.txt
-// Last update: Krinkle (2012-02-06)
 $wdbExternals['db.php'] = wdbLoadPhpFile(
 	"$wdbPath/external/db.php",
 	array( 'wgLBFactoryConf' ),
@@ -11,10 +9,7 @@ $wdbExternals['db.php'] = wdbLoadPhpFile(
 	array( 'DBO_DEFAULT' )
 );
 
-// http://noc.wikimedia.org/conf/all.dblist
-// Last update: Krinkle (2012-02-06)
 $wdbExternals['all.dblist'] = wdbLoadFlatFile( "$wdbPath/external/all.dblist" );
-
 
 // To be populated later. Wiki data table rows by dbname
 $wdbExternals['toolserver.wiki'] = array();
