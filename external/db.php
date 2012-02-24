@@ -29,9 +29,9 @@ $wgLBFactoryConf = array(
 	'trwiki' => 's2',
 	'zhwiki' => 's2',
 
-	'dewiki' => 's5',
 	'commonswiki' => 's4',
 
+	'dewiki' => 's5',
 
 	'frwiki' => 's6',
 	'jawiki' => 's6',
@@ -65,51 +65,49 @@ $wgLBFactoryConf = array(
 # per invocation.
 #
 'sectionLoads' => array(
-	's1' => array(
-		'db36'	   => 0,
-		'db12'		=> 50, # special: watchlist, etc see groupLoadsByDB hardy - rebuild me
-		'db32'		=> 50, # snapshot host
-		'db38'		=> 400, # mysql hung, depooled, repooled with lower load. 20110326 -- mark
-		'db52'		=> 400,
-		'db53'		=> 400,
+	/* s3 */ 'DEFAULT' => array(
+		'db39'    => 0,
+		'db34'	  => 400,
+		'db25'	  => 100, # snapshot host
+		'db11'	  => 400,
 	),
 	's2' => array(
-		'db30'	  => 0,
-		'db13'	  => 200,
-		# 'db15'    => 200, # went down 2011-01-12 - mark
-		#'db19'	  => 200, # lots of ecc errors - maintenance - ryan
+		'db13'	  => 0,
+		'db30'	  => 200,
 		'db24'	  => 100, # Snapshot host
-		'db54'	  => 300, 
+		'db54'	  => 300,
+	),
+	's7' => array(
+		'db37'  => 0,
+		'db16'	=> 500,
+		'db18'  => 500,  # 20110730 - is racking up ECC errors
+		'db26'	=> 300, # Snapshot hsot
 	),
 	's4' => array(
-		'db31'	 => 0,
-		'db22'	 => 300,
-		'db33'	  => 100, # Snapshot host
-		'db51'	  => 400,
+		'db22'	 => 0,
+		'db31'	 => 400,
+		'db33'	 => 100, # Snapshot host
+		'db51'	 => 400,
 	),
 	's5' => array(
 		'db45'	 => 0,
 		'db35'	 => 500,
 		'db44'	 => 500, # snapshot host
-		'db55'	  => 1000,
-	),
-	/* s3 */ 'DEFAULT' => array(
-		'db34'	  => 0,
-		'db39'    => 1000,
-		'db25'	   => 100, # snapshot host
-		'db11'	   => 1000,
+		'db55'	 => 1000,
 	),
 	's6' => array(
 		'db47'	   => 0,
 		'db43'	   => 1000, # hw died 12/18/2011
 		'db46'	   => 400, # snapshot host
-		'db50'	   => 1000, 
+		'db50'	   => 1000,
 	),
-	's7' => array(
-		'db16'	=> 0,
-		'db37' => 600,
-		'db18' => 500,  # 20110730 - is racking up ECC errors
-		'db26'		=> 300, # Snapshot hsot
+	's1' => array(
+		'db36'	  => 0,
+		'db12'	  => 50, # special: watchlist, etc see groupLoadsByDB hardy - rebuild me
+		'db32'	  => 50, # snapshot host
+		'db38'	  => 400, # mysql hung, depooled, repooled with lower load. 20110326 -- mark
+		'db52'	  => 400,
+		'db53'    => 400,
 	),
 ),
 
@@ -323,34 +321,6 @@ $wgLBFactoryConf = array(
 		'10.0.0.227' => 1, # es3
 		'10.0.0.228' => 1, # es4
 	),
-
-	# Obsolete ex-fedora clusters
-	/*
-	'cluster11' => array(
-		'10.0.7.11' => 1,
-		#'10.0.7.111' => 1,
-	),
-	'cluster12' => array(
-		'10.0.7.12' => 1,
-		#'10.0.7.112' => 1,
-	),
-	'cluster16' => array(
-		'10.0.7.16' => 1,
-		#'10.0.7.116' => 1,
-	),
-	'cluster17' => array(
-		'10.0.7.17' => 1,
-		#'10.0.7.117' => 1,
-	),
-	'cluster18' => array(
-		'10.0.7.18' => 1,
-		#'10.0.7.118' => 1,
-	),
-	'cluster19' => array(
-		'10.0.7.19' => 1,
-		#'10.0.7.119' => 1,
-	),
-	 */
 ),
 
 'masterTemplateOverrides' => array(
@@ -382,7 +352,7 @@ $wgLBFactoryConf = array(
 'readOnlyBySection' => array(
 # 'DEFAULT' => 'Emergency maintenance in progress',
 #	's1'	   => 'Maintenance in progress, please try again in 5 minutes',
-#	's4'	   => 'Maintenance in progress, please try again in 5 minutes',
+#	's4'	   => 'Brief Database Maintenance in progress, please try again in 3 minutes',
 ),
 
 );
