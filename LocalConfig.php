@@ -1,6 +1,5 @@
 <?php
 
-
 $wdbContact  = 'krinklemail@gmail.com';
 
 $wdbDefaultSection = 's3';

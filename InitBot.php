@@ -1,5 +1,8 @@
 <?php
 
+// Do not override
+$wdbPath = __DIR__;
+
 // Config
 require_once( "$wdbPath/inc/Defines.php" );
 require_once( "$wdbPath/inc/DefaultConfig.php" );

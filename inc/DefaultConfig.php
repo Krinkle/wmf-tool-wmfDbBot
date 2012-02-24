@@ -5,9 +5,6 @@
  */
 $wdbVersion = '0.4.1';
 
-// Path to main directory
-$wdbPath = dirname( __DIR__ );
-
 // E-mailadress, right now only used in the user agent for API requests.
 $wdbContact = null;
 
