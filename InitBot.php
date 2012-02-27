@@ -1,12 +1,7 @@
 <?php
 
-// Do not override
-$wdbPath = __DIR__;
-
 // Config
-require_once( "$wdbPath/inc/Defines.php" );
-require_once( "$wdbPath/inc/DefaultConfig.php" );
-require_once( "$wdbPath/LocalConfig.php" );
+require_once( __DIR__ . '/inc/InitConfig.php' );
 
 // Initialize globals
 $wdbRequiredConfig = array(

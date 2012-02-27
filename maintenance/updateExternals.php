@@ -1,7 +1,6 @@
 <?php
 
-require_once( __DIR__ . '/../inc/DefaultConfig.php' );
-require_once( "$wdbPath/LocalConfig.php" );
+require_once( __DIR__ . '/../inc/InitConfig.php' );
 
 function logLine($msg = '') {
 	global $wdbPath;
