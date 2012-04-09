@@ -195,7 +195,7 @@ class Commands {
 		);
 		$msgs = array();
 		foreach ( $timestamps as $fileName => $filePath ) {
-			$msgs[] = chr(2) . "[$fileName]" . chr(2) . ' last modified: ' . date( 'Y-m-d H:i:s', @filemtime( $filePath ) ) . ' (UTC)';
+			$msgs[] = chr(2) . "[$fileName]" . chr(2) . ' last update: ' . date( 'Y-m-d H:i:s', @filemtime( $filePath ) ) . ' (UTC)';
 		}
 		return implode( '; ', $msgs );
 	}
