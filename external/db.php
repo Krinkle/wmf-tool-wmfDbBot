@@ -74,40 +74,40 @@ $wgLBFactoryConf = array(
 	's2' => array(
 		'db13'	  => 0,
 		'db30'	  => 200,
-		'db24'	  => 100, # Snapshot host
+		#'db24'	  => 100, # Snapshot host bad dimm 03/21/12
 		'db54'	  => 300,
 	),
 	's7' => array(
 		'db37'  => 0,
 		'db16'	=> 500,
-		'db18'  => 500,  # 20110730 - is racking up ECC errors
+		'db56'  => 500,
 		'db26'	=> 300, # Snapshot hsot
 	),
 	's4' => array(
-		'db22'	 => 0,
-		'db31'	 => 400,
+		'db31'	 => 0,
+		'db22'	 => 400,
 		'db33'	 => 100, # Snapshot host
 		'db51'	 => 400,
 	),
 	's5' => array(
-		'db45'	 => 0,
-		'db35'	 => 500,
+		'db35'	 => 0,
+		'db45'	 => 500,
 		'db44'	 => 500, # snapshot host
 		'db55'	 => 1000,
 	),
 	's6' => array(
-		'db47'	   => 0,
-		'db43'	   => 1000, # hw died 12/18/2011
+		'db43'	   => 0, # hw died 12/18/2011
+		'db47'	   => 1000,
 		'db46'	   => 400, # snapshot host
 		'db50'	   => 1000,
 	),
 	's1' => array(
-		'db36'	  => 0,
-		'db12'	  => 50, # special: watchlist, etc see groupLoadsByDB hardy - rebuild me
+		'db38'	  => 0,
+		'db36'	  => 400,
 		'db32'	  => 50, # snapshot host
-		'db38'	  => 400, # mysql hung, depooled, repooled with lower load. 20110326 -- mark
 		'db52'	  => 400,
-		'db53'    => 400,
+		'db53'    => 100,
+		#'db12'	  => 50, # special: watchlist, etc see groupLoadsByDB hardy - rebuild me
 	),
 ),
 
@@ -135,16 +135,16 @@ $wgLBFactoryConf = array(
 'groupLoadsByDB' => array(
 	'enwiki' => array(
 		'watchlist' => array(
-			'db12' => 1,
+			'db53' => 1,
 		),
 		'recentchangeslinked' => array(
-			'db12' => 1,
+			'db53' => 1,
 		),
 		'contributions' => array(
-			'db12' => 1,
+			'db53' => 1,
 		),
 		'dump' => array(
-			'db12' => 1,
+			'db53' => 1,
 		),
 	),
 ),
@@ -201,6 +201,7 @@ $wgLBFactoryConf = array(
 	'db53'	   => '10.0.6.63', # do not remove or comment out
 	'db54'	   => '10.0.6.64', # do not remove or comment out
 	'db55'	   => '10.0.6.65', # do not remove or comment out
+	'db56'	   => '10.0.6.66', # do not remove or comment out
 	'db1001'	=> '10.64.0.5', # do not remove or comment out
 	'db1002'	=> '10.64.0.6', # do not remove or comment out
 	'db1003'	=> '10.64.0.7', # do not remove or comment out

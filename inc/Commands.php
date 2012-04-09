@@ -4,17 +4,13 @@ class Commands {
 
 	/* Variables */
 	public static $registry = array(
-		'date' => 'getDate',
 		'info' => 'getInfo',
 		'replag' => 'getReplag',
+		'externals' => 'getExternals',
+		'externals-update' => 'purgeExternals',
 	);
 
 	/* Command functions */
-
-	public static function getDate( $options = array() ) {
-		$format = isset( $options[0] ) && !empty( $options[0] ) ? $options[0] : 'r' ;
-		return date( $format );
-	}
 
 	public static function getInfo( $options = array() ) {
 		global $wdbDatabaseInfo, $wdbDefaultSection;
@@ -190,11 +186,50 @@ class Commands {
 
 	}
 
+	public static function getExternals( $options = array() ) {
+		global $wdbPath;
+
+		$timestamps = array(
+			'all.dblist' => "$wdbPath/external/all.dblist",
+			'db.php' => "$wdbPath/external/db.php",
+		);
+		$msgs = array();
+		foreach ( $timestamps as $fileName => $filePath ) {
+			$msgs[] = chr(2) . "[$fileName]" . chr(2) . ' last modified: ' . date( 'Y-m-d H:i:s', @filemtime( $filePath ) ) . ' (UTC)';
+		}
+		return implode( '; ', $msgs );
+	}
+
+	public static function purgeExternals( $options = array() ) {
+		global $wdbPath;
+
+		$output = $return = null;
+		$beforeExternals = self::getExternals();
+		exec(
+			"php " . escapeshellarg( "$wdbPath/maintenance/updateExternals.php" ) . ";",
+			$output,
+			$return
+		);
+		$output = implode( "\n", $output );
+		if ( !$output
+			|| strpos( $output, 'FAILED' ) !== false
+			|| strpos( $output, 'DONE' ) === false
+		) {
+			return array(
+				'pub' => 'Updating externals failed. An error report has been sent to the commander in private.',
+				'priv' => $output,
+			);
+		} else {
+			return array(
+				'pub' => 'Successfully updated externals!',
+				'priv' => $output,
+			);
+		}
+	}
+
 	/* Do not create an instance of this function */
 	private function __construct(){
 		return false;
 	}
 
 }
-
-

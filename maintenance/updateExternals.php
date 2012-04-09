@@ -33,12 +33,12 @@ foreach ( $externals as $extName => $ext ) {
 	$raw = file_get_contents( $ext['remote'] );
 	
 	if ( $raw  && strlen( $raw ) > 3 ) {
-		logLine( "- Downloaded succeeded" );
+		logLine( "- Download DONE" );
 		logLine( "- Saving to: {$ext['local']}" );
 
 		$stat = file_put_contents( $ext['local'], $raw );
 		if ( $stat ) {
-			logLine( "- Save succeeded" );
+			logLine( "- Save DONE" );
 		} else {
 			logLine( "- Save FAILED" );
 		}
