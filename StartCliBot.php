@@ -26,8 +26,12 @@ while( ( $input = Maintenance::readconsole() ) !== false ) {
 		Maintenance::out( 'An unexpected error occurred. Aborting...' );
 		break;
 	} else {
-		$return = wdbExecuteCommand( $command );
-		Maintenance::out( "<$wdbNickname>: $return" );
+		// Can return 1 msg or array of messages
+		$msgs = wdbExecuteCommand( $command );
+		$msgs = (array)$msgs;
+		foreach ( $msgs as $msg ) {
+			Maintenance::out( "<$wdbNickname>: $msg" );
+		}
 	}
 }
 

@@ -22,9 +22,6 @@ $wdbRequiredConfig = array(
 	'wdbPath',
 	'wdbContact',
 	'wdbDefaultSection',
-	'wdbDefaultSectionWiki',
-	'wdbTsDbUser',
-	'wdbTsDbPassword',
 );
 $wdbExternals = array();
 $wdbDatabaseInfo = null;
@@ -40,3 +37,5 @@ if ( ( $undefined = wdbGlobalsNotNull( $wdbRequiredConfig ) ) !== true ) {
 require_once( "$wdbPath/inc/Commands.php" );
 require_once( "$wdbPath/inc/Externals.php" );
 require_once( "$wdbPath/inc/libs/Args.php" );
+
+wdbExternals::readExternals();

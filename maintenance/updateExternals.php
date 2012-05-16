@@ -11,47 +11,36 @@ function logLine($msg = '') {
 	global $wdbPath;
 	$msg = '[' . gmdate( 'r' ) . '] ' . trim($msg)."\n";
 
-	echo $msg;
+	print $msg;
 
 	$logFilePath = "$wdbPath/logs/updateExternals.log";
 	file_put_contents($logFilePath, $msg, FILE_APPEND | LOCK_EX);
 }
 
-logLine( 'Attempting to  externals ..' );
+logLine( 'Attempting to update externals ...' );
 
 
-$externals = array(
-	'db.php' => array(
-		'remote' => 'http://noc.wikimedia.org/conf/db.php.txt',
-		'local' => "$wdbPath/external/db.php",
-	),
-	'all.dblist' => array(
-		'remote' => 'http://noc.wikimedia.org/conf/all.dblist',
-		'local' => "$wdbPath/external/all.dblist",
-	),
-);
+/**
+ * operations/mediawiki-config.git
+ */
+$extName = 'wmf-operations-mediawiki-config';
+logLine( "$extName:" );
+chdir( __DIR__ . '/../externals/' . $extName );
+foreach( array(
+	'git remote update;',
 
-foreach ( $externals as $extName => $ext ) {
+	'git reset --hard;',
+	'git clean -d -x --force;',
+	'git checkout master;',
 
-	logLine( "$extName:" );
-	logLine( "- Downloading remote from: {$ext['remote']}" );
-	$raw = file_get_contents( $ext['remote'] );
-	
-	if ( $raw  && strlen( $raw ) > 3 ) {
-		logLine( "- Download DONE" );
-		logLine( "- Saving to: {$ext['local']}" );
-
-		$stat = file_put_contents( $ext['local'], $raw );
-		if ( $stat ) {
-			logLine( "- Save DONE" );
-		} else {
-			logLine( "- Save FAILED" );
-		}
-
-	} else {
-		logLine( "- Download FAILED" );
-	}
-
+	'git reset --hard remotes/origin/master;',
+	'git clean -d -x --force;',
+) as $cmd ) {
+	print "* $cmd\n";;
+	passthru( $cmd );
 }
+
+logLine( "$extName: Finished." );
+
 
 logLine( 'End of script.' );

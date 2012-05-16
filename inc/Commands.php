@@ -23,173 +23,189 @@ class Commands {
 			return 'Invalid arguments';
 		}
 
-		$options[0] = trim(strtolower($options[0]));
+		$input = trim( strtolower( $options[0] ) );
 
 		// "DEFAULT"
-		if ( $options[0] == 'default' ) {
-			$options[0] = $wdbDefaultSection;
+		if ( $input == 'default' ) {
+			$input = $wdbDefaultSection;
 		}
 
-		list( $type, $id, $info, $extra ) = wdbGetInfo( $options[0] );
+		$info = wdbGetInfo( $input );
+		$sectionAnnotated = wdbAnnotateDefaultSection( $info['section'] );
 
-		switch( $type ) {
-		
+		switch( $info['type'] ) {
 			case 'section':
-				$dbs = array();
-				foreach( $info as $dbhost ) {
-					$dbs[] = "$dbhost: {$wdbDatabaseInfo['dbhosts'][$dbhost]}";
+
+				$output = array();
+				foreach ( $info['relation'] as $dbhost ) {
+					$output[] = "$dbhost: {$wdbDatabaseInfo['dbhostToIP'][$dbhost]}";
 				}
-				$id = wdbResolveDefaultSection( $id );
-				$dbs = join( ', ', $dbs );
-				$return = "[$id] $dbs";
+
+				$return = "[$sectionAnnotated] " . join( ', ', $output );
 				break;
 
 			case 'dbhost':
-				$extra = wdbResolveDefaultSection ( $extra );
-				$return = "[$id: $extra] $info";
+
+				$return = "[$input: $sectionAnnotated] " . $info['relation'];
 				break;
 
 			case 'dbname':
-				$dbs = array();
-				foreach( $info as $dbhost ) {
-					$dbs[] = "$dbhost: {$wdbDatabaseInfo['dbhosts'][$dbhost]}";
+
+				$output = array();
+				foreach ( $info['relation'] as $dbhost ) {
+					$output[] = "$dbhost: {$wdbDatabaseInfo['dbhostToIP'][$dbhost]}";
 				}
-				$dbs = join( ', ', $dbs );
-				$extra = wdbResolveDefaultSection ( $extra );
-				$return = "[$id: $extra] $dbs";
+
+				$return = "[$input: $sectionAnnotated] " . join( ', ', $output );
 				break;
 
-			default: // case 'unknown':
+			case 'ip':
+
+				$return = "[$input: $sectionAnnotated] " . $info['relation'];
+				break;
+
+			// case 'unknown':
+			default:
+
 				$return = "Unknown identifier ({$options[0]})";
-		
 		}
-		
+
 		return $return;
 	}
 
 	public static function getReplag( $options = array() ) {
 		global $wdbDatabaseInfo;
 
+		$input = isset( $options[0] )
+			? trim( strtolower( $options[0] ) )
+			: null;
 
 		/* Check all  */
 
-		// "!replag"
-		if ( !isset( $options[0] ) ) {
-			$return = array();
-			$replag = getAllReplag( WDB_USE_IGNOREMAX );
+		// "wmfDbBot: replag"
+		if ( !$input ) {
+			$output = array();
+			$replags = getAllReplag( WDB_USE_IGNOREMAX );
 
 			// Build output
-			foreach ( $replag as $section => $dbhosts ) {
+			foreach ( $replags as $section => $dbhosts ) {
 				$tmp = array();
-				foreach( $dbhosts as $dbhost=>$dbhostLag ) {
+				foreach ( $dbhosts as $dbhost => $dbhostLag ) {
 					$tmp[] = "$dbhost: {$dbhostLag}s";
 				}
-				$return[] = chr(2) . "[$section] " . chr(2) . implode( ', ', $tmp );
+				$output[] = chr(2) . "[$section] " . chr(2) . implode( ', ', $tmp );
 			}
-			if ( count( $return ) ) {
-				return implode( "; ", $return );
+
+			if ( count( $output ) ) {
+				return implode( "; ", $output );
 			}
+
 			return 'No replag currently. See also "replag all".';
 		}
 
-		// "!replag all"
-		if ( trim(strtolower($options[0])) == 'all' ) {
-			$return = array();
-			$replag = getAllReplag( WDB_FORCE_SHOW_ALL );
+		// "wmfDbBot: replag all"
+		if ( $input === 'all' ) {
+			$output = array();
+			$replags = getAllReplag( WDB_FORCE_SHOW_ALL );
 
 			// Build output
-			foreach ( $replag as $section => $dbhosts ) {
+			foreach ( $replags as $section => $dbhosts ) {
 				$tmp = array();
-				foreach( $dbhosts as $dbhost=>$dbhostLag ) {
+				foreach ( $dbhosts as $dbhost => $dbhostLag ) {
 					$tmp[] = "$dbhost: {$dbhostLag}s";
 				}
-				$return[] = chr(2) . "[$section] " . chr(2) . implode( ', ', $tmp );
+				$output[] = chr(2) . "[$section] " . chr(2) . implode( ', ', $tmp );
 			}
-			if ( count( $return ) ) {
+
+			if ( count( $output ) ) {
 				// Split in seperate messages
 				// s1-s4, s5-s7
 				return array(
-					implode( '; ', array_slice( $return, 0, 3) ),
-					implode( '; ', array_slice( $return, 3) ),
+					implode( '; ', array_slice( $output, 0, 3) ),
+					implode( '; ', array_slice( $output, 3 ) ),
 				);
 			}
+
 			return 'No replag information was available.';
 		}
 
 
 		/* Check one specific id */
+		// wmfDbBot: [identifier]
 
-		list( $type, $id, $info, $extra ) = wdbGetInfo( $options[0] );
+		$info = wdbGetInfo( $input );
+		$sectionAnnotated = wdbAnnotateDefaultSection( $info['section'] );
 
-		switch( $type ) {
-		
+		switch( $info['type'] ) {
 			case 'section':
 
-				$replag = getReplagFromSection( $id );
-				if ( !$replag ) {
+				$replags = getReplagFromSection( $info['section'] );
+				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
 
-				// Build output
-				$outputInfo = array();
-				foreach( $info as $dbhost ) {
-					$outputInfo[] = "$dbhost: {$replag[$dbhost]}s";
+				$output = array();
+				foreach ( $info['relation'] as $dbhost ) {
+					$output[] = "$dbhost: {$replags[$dbhost]}s";
 				}
 
-				// Return
-				$outputInfo = join( ', ', $outputInfo );
-				$return = "[$id] $outputInfo";
+				$return = "[$sectionAnnotated] " . join( ', ', $output );
 				break;
 
 			case 'dbhost':
+				$dbhost = $input;
 
-				$replag = getReplagFromDbhost( $id );
-				if ( !$replag ) {
+				$replags = getReplagFromDbhost( $dbhost );
+				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
 
-				// Build output
-				$outputInfo = "$id: {$replag[$id]}s";
-
-				// Return
-				$return = "[$id] $outputInfo";
+				$return = "[$dbhost: $sectionAnnotated] $input: " . $replags[$dbhost] . 's';
 				break;
 
 			case 'dbname':
 
 				// Centralauth is not a wiki
-				if ( $id == 'centralauth' ) {
-					// Get centralauth-section
-					$tmp = wdbGetInfo('centralauth');
-					$section = $tmp[3];
-					$replag = getReplagFromSection( $section );
+				if ( $input === 'centralauth' ) {
+					// Get centralauth's section
+					$tmp = wdbGetInfo( $input );
+					$replags = getReplagFromSection( $tmp['section'] );
 				} else {
-					$replag = getReplagFromDbname( $id );
+					$replags = getReplagFromDbname( $input );
 				}
-				if ( !$replag ) {
+
+				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
 
-				// Build output
-				$outputInfo = array();
-				foreach( $info as $dbhost ) {
-					if ( isset( $replag[$dbhost] ) ) {
-						$outputInfo[] = "$dbhost: {$replag[$dbhost]}s";
+				$output = array();
+				foreach ( $info['relation'] as $dbhost ) {
+					if ( isset( $replags[$dbhost] ) ) {
+						$output[] = "$dbhost: {$replags[$dbhost]}s";
 					} else {
-						$outputInfo[] = "$dbhost: ?";
+						$output[] = "$dbhost: ?";
 					}
 				}
 
-				// Return
-				$outputInfo = join( ', ', $outputInfo );
-				$return = "[$id: $extra] $outputInfo";
+				$return = "[$input: $sectionAnnotated] " . join( ', ', $output );
 				break;
 
-			default: // case 'unknown':
+			case 'ip':
+				$dbhost = $info['relation'];
+
+				$replags = getReplagFromDbhost( $dbhost );
+				if ( !$replags ) {
+					return 'Could not get replag information.';
+				}
+
+				$return = "[$dbhost: $sectionAnnotated] $input: " . $replags[$dbhost] . 's';
+				break;
+
+			// case 'unknown':
+			default:
 				$return = 'Unknown identifier';
-		
 		}
-		
+
 		return $return;
 
 	}
@@ -197,32 +213,32 @@ class Commands {
 	public static function getExternals( $options = array() ) {
 		global $wdbPath;
 
-		$timestamps = array(
-			'all.dblist' => "$wdbPath/external/all.dblist",
-			'db.php' => "$wdbPath/external/db.php",
-		);
 		$msgs = array();
-		foreach ( $timestamps as $fileName => $filePath ) {
-			$msgs[] = chr(2) . "[$fileName]" . chr(2) . ' last update: ' . date( 'Y-m-d H:i:s', @filemtime( $filePath ) ) . ' (UTC)';
-		}
+
+		// wmf-operations-mediawiki-config
+		chdir( "$wdbPath/externals/wmf-operations-mediawiki-config" );
+		$gitHead = trim( exec( 'git rev-parse --verify HEAD' ) );
+
+		$msgs[] = chr(2) . "[operations/mediawiki-config.git]" . chr(2)
+			. ' Checked out HEAD: ' . $gitHead
+			. ' - ' . 'https://gerrit.wikimedia.org/r/gitweb?p=operations/mediawiki-config.git;a=commit;h=' . urlencode( $gitHead );
+
 		return implode( '; ', $msgs );
 	}
 
 	public static function purgeExternals( $options = array() ) {
 		global $wdbPath;
 
-		$output = $return = null;
-		$beforeExternals = self::getExternals();
-		exec(
-			"php " . escapeshellarg( "$wdbPath/maintenance/updateExternals.php" ) . ";",
-			$output,
-			$return
-		);
-		$output = implode( "\n", $output );
-		if ( !$output
-			|| strpos( $output, 'FAILED' ) !== false
-			|| strpos( $output, 'DONE' ) === false
-		) {
+		ob_start();
+
+		passthru( "php " . escapeshellarg( "$wdbPath/maintenance/updateExternals.php" ) . ";" );
+		// After updating it, re-read them into the bot state
+		wdbExternals::readExternals();
+
+		$output = ob_get_contents();
+		ob_end_clean();
+
+		if ( !$output ) {
 			return array(
 				'pub' => 'Updating externals failed. An error report has been sent to the commander in private.',
 				'priv' => $output,
@@ -236,7 +252,7 @@ class Commands {
 	}
 
 	/* Do not create an instance of this function */
-	private function __construct(){
+	private function __construct() {
 		return false;
 	}
 

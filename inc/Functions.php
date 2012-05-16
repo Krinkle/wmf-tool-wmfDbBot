@@ -6,7 +6,7 @@
  */
 
 function wdbLoadPhpFile( $path, $extractVars = array(),
-	$dependancyGlobals = array(), $dependancyDefines = array() ) {
+	$dependencyGlobals = array(), $dependencyDefines = array() ) {
 	// Verify existance
 	if ( !file_exists( $path ) ) {
 		return false;
@@ -16,13 +16,13 @@ function wdbLoadPhpFile( $path, $extractVars = array(),
 	$base = array_fill_keys( $extractVars, null );
 
 	// Dependancies (fix E_NOTICE)
-	foreach( $dependancyGlobals as $depGlobal ) {
+	foreach( $dependencyGlobals as $depGlobal ) {
 		if ( !isset( $GLOBALS[$depGlobal] ) ) {
 			$GLOBALS[$depGlobal] = null;
 		}
 		global $$depGlobal;
 	}
-	foreach( $dependancyDefines as $depDefine ) {
+	foreach( $dependencyDefines as $depDefine ) {
 		if ( !defined( $depDefine ) ) {
 			define( $depDefine, 1 );
 		}
@@ -108,7 +108,7 @@ function wdbProccessRawCommand( $input = null ) {
 	} elseif ( in_array( $input, $quits ) ) {
 		$command->isQuit = true;
 		return $command;
-	
+
 	} else {
 		list( $function, $args ) = wdbParseCommand( $input );
 		$command->fnName = $function;
@@ -122,22 +122,30 @@ function wdbParseCommand( $input ) {
 	if ( !is_string( $input ) ) {
 		$input = '';
 	}
-	@list( $function, $args ) = explode( ' ', $input, 2 );
-	return array( $function, explode( ' ', $args ) );
+
+	// Trim input. Could contain trailing spaces or (in case of cli) a \n
+	$input = trim( $input );
+
+	$split = explode( ' ', $input, 2 );
+
+	$function = $split[0];
+	$args = isset( $split[1] ) ? explode( ' ', $split[1] ) : array();
+
+	return array( $function, $args );
 }
 
 function wdbExecuteCommand( $command ) {
 	if ( isset( Commands::$registry[$command->fnName] ) ) {
 		$fn = Commands::$registry[$command->fnName];
 		return Commands::$fn( $command->fnArgs );
-	
+
 	} else {
 		return "Unknown command: {$command->fnName}.";
 	}
 
 }
 
-function wdbResolveDefaultSection( $section ) {
+function wdbAnnotateDefaultSection( $section ) {
 	global $wdbDefaultSection;
 	if ( $section == 'DEFAULT' ) {
 		return "$section ($wdbDefaultSection)";
@@ -148,55 +156,85 @@ function wdbResolveDefaultSection( $section ) {
 }
 
 
+/** @return array */
 function wdbGetInfo( $id ) {
 	global $wdbDatabaseInfo;
 
 	$needle = trim( strtolower( $id ) );
 
-	// Check sections
-	if ( isset( $wdbDatabaseInfo['sections'][$needle] ) ) {
+	// Check section
+	if ( isset( $wdbDatabaseInfo['sectionToDbhosts'][$needle] ) ) {
 
-		// array(db1, db2, ...)
-		$dbhosts = array_keys( $wdbDatabaseInfo['sections'][$needle] );
+		$dbhosts = $wdbDatabaseInfo['sectionToDbhosts'][$needle];
 
-		return array( 'section', $needle, $dbhosts, null );
+		return array(
+			'type'     => 'section',
+			'input'    => $needle,
+			'relation' => $dbhosts,
+			'section'  => $needle,
+		);
 
-	// Check db hosts
-	} elseif ( isset( $wdbDatabaseInfo['dbhosts'][$needle] ) ) {
+	// Check dbhost
+	} elseif ( isset( $wdbDatabaseInfo['dbhostToIP'][$needle] ) ) {
 
-		// 0.0.0.0
-		$ip =  $wdbDatabaseInfo['dbhosts'][$needle];
+		$ip =  $wdbDatabaseInfo['dbhostToIP'][$needle];
 
-		// Get section
 		$section = '?';
-		foreach( $wdbDatabaseInfo['sections'] as $section => $dbhosts ) {
-			if ( isset( $dbhosts[$needle] ) ) {
+		foreach( $wdbDatabaseInfo['sectionToDbhosts'] as $section => $dbhosts ) {
+			if ( in_array( $needle, $dbhosts ) ) {
 				break;
 			}
 		}
 
-		return array( 'dbhost', $needle, $ip, $section );
+		return array(
+			'type'     => 'dbhost',
+			'input'    => $needle,
+			'relation' => $ip,
+			'section'  => $section,
+		);
 
-	// Check db names
-	} elseif ( isset( $wdbDatabaseInfo['dbnames'][$needle] ) ) {
+	// Check dbname
+	} elseif ( isset( $wdbDatabaseInfo['dbnameToSection'][$needle] ) ) {
 
-		// Get the section as extra info
-		$section = $wdbDatabaseInfo['dbnames'][$needle];
+		$section = $wdbDatabaseInfo['dbnameToSection'][$needle];
+		$dbhosts = $wdbDatabaseInfo['sectionToDbhosts'][$section];
 
-		// array(db1, db2, ...)
-		$dbhosts = array_keys( $wdbDatabaseInfo['sections'][$section] );
+		return array(
+			'type'     => 'dbname',
+			'input'    => $needle,
+			'relation' => $dbhosts,
+			'section'  => $section,
+		);
 
-		return array( 'dbname', $needle, $dbhosts, $section );
+	// Check dbhost IP
+	} elseif ( isset( $wdbDatabaseInfo['ipToDbhost'][$needle] ) ) {
+
+		$dbhost = $wdbDatabaseInfo['ipToDbhost'][$needle];
+		$section = $wdbDatabaseInfo['dbhostToSection'][$dbhost];
+
+		return array(
+			'type'     => 'ip',
+			'input'    => $needle,
+			'relation' => $dbhost,
+			'section'  => $section,
+		);
 
 	// Else: unknown
 	} else {
-		return array( 'unknown', $needle, null, null );
+		return array(
+			'type'     => 'unknown',
+			'input'    => $needle,
+			'relation' => null,
+			'section'  => null,
+		);
 	}
 
 }
 
 function wdbSimpleCurlGetContent( $url ) {
 	static $curlOpt = null;
+
+	print "wdbSimpleCurlGetContent: $url\n";
 
 	if ( is_null( $curlOpt ) ) {
 		global $wdbUserAgent;
@@ -219,7 +257,7 @@ function wdbSimpleCurlGetContent( $url ) {
 // dbhost > section > (random)dbname > mwroot > api-replag
 function getReplagFromDbhost( $dbhost ) {
 	$info = wdbGetInfo( $dbhost );
-	$section = $info[3];
+	$section = $info['section'];
 	return getReplagFromSection( $section );
 }
 
@@ -245,7 +283,7 @@ function getReplagFromDbname( $dbname ) {
 }
 
 function wdbMwRootFromDbname( $dbname ) {
-	$wikidata = wdbGetExternalVar( 'toolserver.wiki', "{$dbname}_p" );
+	$wikidata = wdbGetExternalVar( 'toolserver.wiki', $dbname );
 	if ( !$wikidata ) {
 		return false;
 	}
@@ -273,7 +311,7 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 	if ( !$apiReturn ) {
 		return 'no: ' . $apiReturn;
 	}
-	$apiResult = json_decode( $apiReturn );
+	$apiResult = json_decode( $apiReturn, /*assoc=*/true );
 	if ( !$apiResult ) {
 		return 'false: ' . $apiReturn;
 	}
@@ -282,7 +320,7 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 	/**
 	 * Transform:
 	 *  array( 0 => array( 'host' => 'name', 'lag' => 1 ), 1 => ... );
-	 * ..into: 
+	 * ..into:
 	 *  array( 'name' => 1, 'othername' => 0 );
 	 */
 	$return = array();
@@ -293,18 +331,18 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 }
 
 function getAllReplag( $hide = WDB_USE_IGNOREMAX ) {
-	global $wdbDatabaseInfo, $wdbDefaultMaxIgnoreLag;
-	
+	global $wdbDatabaseInfo, $wdbReplagThreshold;
+
 	$all = array();
 	$replag = null;
 
-	foreach( $wdbDatabaseInfo['sections'] as $section => $sectionDbhosts ) {
+	foreach( $wdbDatabaseInfo['sectionToDbhosts'] as $section => $sectionDbhosts ) {
 		$replag = getReplagFromSection( $section );
 		if ( $replag ) {
 			foreach( $replag as $dbhost => $dbhostReplag ) {
-				if ( $hide == WDB_FORCE_SHOW_ALL || intval($dbhostReplag) > $wdbDefaultMaxIgnoreLag ) {
+				if ( $hide == WDB_FORCE_SHOW_ALL || intval($dbhostReplag) > $wdbReplagThreshold ) {
 					$all[$section][$dbhost] = $dbhostReplag;
-				}			
+				}
 			}
 		}
 	}

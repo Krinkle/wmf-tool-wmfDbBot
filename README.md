@@ -8,12 +8,13 @@ wmfDbBot requires PHP 5.3.2 or higher.
 
 1. Get started by cloning the repository:
    <br>`git clone https://github.com/Krinkle/ts-krinkle-Kribo.git`
-1. Make sure you set in LocalSettings:
+1. Initialize sub modules:
+   <br>`git submodule update --init`
+1. Make sure you set the following in `./LocalConfig.php`:
  * `wdbContact`
  * `wdbDefaultSection`
- * `wdbDefaultSectionWiki`
- * `wdbTsDbUser`
- * `wdbTsDbPassword`
+1. Create an `./externals/` and `./logs/` directory
+1. Run `php ./maintenance/updateExternals.php`
 
 ## Commands
 
@@ -25,9 +26,9 @@ wmfDbBot requires PHP 5.3.2 or higher.
 ### Replag
 
 * Format: `replag`
-  <br>Show list of only the dbs having a replication lag higher than the configured treshold.
+  <br>Show list of only the dbs having a replication lag higher than the configured threshold.
 * Format: `replag [identifier]`
-  <br>Show all dbs related to the specified identifier and their replication lag (including ones with a lag lower than the treshold).
+  <br>Show all dbs related to the specified identifier and their replication lag (including ones with a lag lower than the threshold).
 * Format: `replag all`
   <br>Show all dbs of all cluster sections and their current replication lag.
 

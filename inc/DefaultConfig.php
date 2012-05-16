@@ -19,17 +19,14 @@ $wdbContact = null;
 // Server config: Default section name for wikis without a section or in section 'DEFAULT' (e.g. 's3')
 $wdbDefaultSection = null;
 
-// Server config: Any wiki that is in the default section, used to get replag for 'DEFAULT' (e.g. 'mediawikiwiki')
-$wdbDefaultSectionWiki = null;
-
-// Database access to sql.toolserver.org
-$wdbTsDbUser = null;
-$wdbTsDbPassword = null;
+// Path to ts-krinkle-getWikiAPI install
+$wdbTsGetWikiAPI = 'http://toolserver.org/~krinkle/getWikiAPI/';
 
 /**
  * Config for interface (defaults to st-out)
  */
 $wdbNickname = 'wmfDbBot';
 
-// The 'replag' command only shows dbs with a replag higher than this number of seconds
-$wdbDefaultMaxIgnoreLag = 1;
+// The 'replag' command only lists sections with a replag higher than this threshold
+// (in number of seconds). 'replag all' is not affected by the threshold.
+$wdbReplagThreshold = 0;

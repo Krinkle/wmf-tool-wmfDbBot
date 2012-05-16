@@ -1,0 +1,3 @@
+[submodule "externals/wmf-operations-mediawiki-config"]
+	path = externals/wmf-operations-mediawiki-config
+	url = https://gerrit.wikimedia.org/r/p/operations/mediawiki-config.git
