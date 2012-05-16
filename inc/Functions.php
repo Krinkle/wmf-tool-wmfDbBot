@@ -256,7 +256,7 @@ function wdbMwRootFromDbname( $dbname ) {
  */
 function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 	static $apiQuery = array(
-		'format' => 'php',
+		'format' => 'json',
 		'action' => 'query',
 		'meta' => 'siteinfo',
 		'siprop' => 'dbrepllag',
@@ -269,7 +269,7 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 	if ( !$apiReturn ) {
 		return 'no: ' . $apiReturn;
 	}
-	$apiResult = unserialize( $apiReturn );
+	$apiResult = json_decode( $apiReturn );
 	if ( !$apiResult ) {
 		return 'false: ' . $apiReturn;
 	}

@@ -169,7 +169,11 @@ class Commands {
 				// Build output
 				$outputInfo = array();
 				foreach( $info as $dbhost ) {
-					$outputInfo[] = "$dbhost: {$replag[$dbhost]}s";
+					if ( isset( $replag[$dbhost] ) ) {
+						$outputInfo[] = "$dbhost: {$replag[$dbhost]}s";
+					} else {
+						$outputInfo[] = "$dbhost: ?";
+					}
 				}
 
 				// Return
