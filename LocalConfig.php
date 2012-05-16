@@ -10,3 +10,5 @@ $mycnf = parse_ini_file( '/home/krinkle/.my.cnf' );
 $wdbTsDbUser = $mycnf['user'];
 $wdbTsDbPassword = $mycnf['password'];
 unset( $mycnf );
+
+$wdbDefaultMaxIgnoreLag = 0;
