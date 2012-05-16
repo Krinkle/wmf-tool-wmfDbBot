@@ -1,4 +1,18 @@
 <?php
+/**
+ * This file initializes wmfDbBot.
+ * This is the only valid point of entry.
+ *
+ * @author Timo Tijhof, 2011
+ * @since 0.1
+ * @package wmfDbBot
+ */
+
+// Minimum PHP version
+if ( !function_exists( 'version_compare' ) || version_compare( phpversion(), '5.3.2' ) < 0 ) {
+	echo "<b>wmfDbBot Fatal:</b> wmfDbBot requires at least PHP 5.3.2\n";
+	exit;
+}
 
 // Config
 require_once( __DIR__ . '/inc/InitConfig.php' );

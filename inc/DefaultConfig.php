@@ -1,4 +1,9 @@
 <?php
+/**
+ * @author Timo Tijhof, 2011
+ * @since 0.1
+ * @package wmfDbBot
+ */
 
 /**
  * General

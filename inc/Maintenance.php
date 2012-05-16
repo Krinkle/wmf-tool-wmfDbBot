@@ -1,6 +1,10 @@
 <?php
 /**
- * Abstracted from MediaWiki's Maintenance.php
+ * Based from MediaWiki's Maintenance.php
+ *
+ * @author Timo Tijhof, 2011
+ * @since 0.1
+ * @package wmfDbBot
  */
 
 class Maintenance {
@@ -12,13 +16,13 @@ class Maintenance {
 		self::out($prompt, '');
 		return fgets( STDIN, 1024 );
 	}
-	
+
 	public static function readconsole( $prompt = '> ' ) {
 		static $isatty = null;
 		if ( is_null( $isatty ) ) {
 			$isatty = posix_isatty( 0 /*STDIN*/ );
 		}
-	
+
 		if ( $isatty && function_exists( 'readline' ) ) {
 			return readline( $prompt );
 		} else {
