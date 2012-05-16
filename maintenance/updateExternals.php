@@ -9,15 +9,15 @@ require_once( __DIR__ . '/../inc/InitConfig.php' );
 
 function logLine($msg = '') {
 	global $wdbPath;
-	$msg = '[' . gmdate( 'r' ) . '] ' . trim($msg)."\n";
+	$msg = '[' . gmdate( 'r' ) . '] ' . trim( $msg ) . "\n";
 
 	print $msg;
 
 	$logFilePath = "$wdbPath/logs/updateExternals.log";
-	file_put_contents($logFilePath, $msg, FILE_APPEND | LOCK_EX);
+	file_put_contents( $logFilePath, $msg, FILE_APPEND | LOCK_EX );
 }
 
-logLine( 'Attempting to update externals ...' );
+logLine( 'Updating externals ...' );
 
 
 /**
@@ -25,6 +25,10 @@ logLine( 'Attempting to update externals ...' );
  */
 $extName = 'wmf-operations-mediawiki-config';
 logLine( "$extName:" );
+
+chdir( __DIR__ . '/..' );
+passthru( 'git submodule update --init' );
+
 chdir( __DIR__ . '/../externals/' . $extName );
 foreach( array(
 	'git remote update;',
