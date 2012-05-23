@@ -26,10 +26,7 @@ logLine( 'Updating externals ...' );
 $extName = 'wmf-operations-mediawiki-config';
 logLine( "$extName:" );
 
-chdir( __DIR__ . '/..' );
-passthru( 'git submodule update --init' );
-
-chdir( __DIR__ . '/../externals/' . $extName );
+chdir( $wdbPath . '/externals/' . $extName );
 foreach( array(
 	'git remote update;',
 
