@@ -67,7 +67,7 @@ class Commands {
 			// case 'unknown':
 			default:
 
-				$return = "Unknown identifier ({$options[0]})";
+				$return = "Unknown identifier ({$input})";
 		}
 
 		return $return;
