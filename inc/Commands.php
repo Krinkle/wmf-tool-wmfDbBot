@@ -145,8 +145,27 @@ class Commands {
 				}
 
 				$output = array();
+
 				foreach ( $info['relation'] as $dbhost ) {
-					$output[] = "$dbhost: {$replags[$dbhost]}s";
+					// Check whether this is set. We are comparing here:
+					// What we believe are dbhosts belonging to this section
+					// (according to externals' wmf-config/db.php), and the
+					// response of the API. If either has changed since the
+					// last sync, we will have missing or additional keys here.
+					$output[] = isset( $replags[$dbhost] )
+						? "$dbhost: {$replags[$dbhost]}s"
+						: "$dbhost (?): -";
+				}
+
+				// The above outputs ? for dbhosts that were in the section cluster
+				// but are no longer according to api.php
+				// The below outputs additional dbhosts that aren't known yet in db.php
+				// but are outputted in api.php
+				foreach ( $replags as $dbhost => $replag ) {
+					// Only output the ones not already output above in $info['relation']
+					if ( !in_array( $dbhost, $info['relation'] ) ) {
+						$output[] = "$dbhost (!): {$replag}s";
+					}
 				}
 
 				$return = "[$sectionAnnotated] " . join( ', ', $output );

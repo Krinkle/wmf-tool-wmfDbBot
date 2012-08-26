@@ -9,7 +9,7 @@ function wdbLoadPhpFile( $path, $extractVars = array(),
 	$dependencyGlobals = array(), $dependencyDefines = array() ) {
 	// Verify existance
 	if ( !file_exists( $path ) ) {
-		return false;
+		throw new Exception( __FUNCTION__ . " could not find: $path" );
 	}
 
 	// Create base array with all expected variables set to null
@@ -18,9 +18,8 @@ function wdbLoadPhpFile( $path, $extractVars = array(),
 	// Dependancies (fix E_NOTICE)
 	foreach( $dependencyGlobals as $depGlobal ) {
 		if ( !isset( $GLOBALS[$depGlobal] ) ) {
-			$GLOBALS[$depGlobal] = null;
+			$$depGlobal = '';
 		}
-		global $$depGlobal;
 	}
 	foreach( $dependencyDefines as $depDefine ) {
 		if ( !defined( $depDefine ) ) {
@@ -35,15 +34,17 @@ function wdbLoadPhpFile( $path, $extractVars = array(),
 	return array_merge( $base, $extracted );
 }
 
+/**
+ * Based on:
+ * https://gerrit.wikimedia.org/r/gitweb?p=operations/mediawiki-config.git;a=blob;f=refresh-dblist;h=456e95a2989590b353a8a43330db159d7204c42f;hb=HEAD#l29
+ */
 function wdbLoadFlatFile( $path ) {
 	// Verify existance
 	if ( !file_exists( $path ) ) {
-		return false;
+		throw new Exception( __FUNCTION__ . " could not find: $path" );
 	}
 
-	$lines = array_map( 'trim', file( $path ) );
-
-	return $lines;
+	return array_filter( array_map( 'trim', file( $path ) ) );
 }
 
 function wdbGetExternalVar( $id, $var, $fallback = null ) {
@@ -232,25 +233,22 @@ function wdbGetInfo( $id ) {
 }
 
 function wdbSimpleCurlGetContent( $url ) {
-	static $curlOpt = null;
+	global $wdbUserAgent;
 
 	print "wdbSimpleCurlGetContent: $url\n";
 
-	if ( is_null( $curlOpt ) ) {
-		global $wdbUserAgent;
-		$curlOpt = array(
-			CURLOPT_RETURNTRANSFER => 1,
-			CURLOPT_USERAGENT => $wdbUserAgent,
-		);
-	}
-
 	$ch = curl_init();
-	curl_setopt_array( $ch, $curlOpt );
-	curl_setopt( $ch, CURLOPT_URL, $url );
+	curl_setopt_array( $ch, array(
+		CURLOPT_RETURNTRANSFER => 1,
+		CURLOPT_USERAGENT => $wdbUserAgent,
+		CURLOPT_URL => $url,
+	) );
 	$raw = curl_exec( $ch );
+
 	if ( curl_errno( $ch ) ) {
 		return curl_errno( $ch );
 	}
+
 	return $raw;
 }
 
