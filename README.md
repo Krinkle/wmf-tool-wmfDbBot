@@ -7,7 +7,7 @@ wmfDbBot is a PHP interface to retrieve information about the databases of Wikim
 wmfDbBot requires PHP 5.3.2 or higher.
 
 1. Get started by cloning the repository:
-   <br>`git clone https://github.com/Krinkle/ts-krinkle-Kribo.git`
+   <br>`git clone https://github.com/Krinkle/ts-krinkle-wmfDbBot.git`
 1. Initialize sub modules:
    <br>`git submodule update --init`
 1. Make sure you set the following in `./LocalConfig.php`:
