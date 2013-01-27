@@ -300,7 +300,7 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 		'action' => 'query',
 		'meta' => 'siteinfo',
 		'siprop' => 'dbrepllag',
-		'sishowalldb' => true,
+		'sishowalldb' => '1',
 	);
 	$apiUrl = "{$mwRoot}api.php?" . http_build_query( $apiQuery );
 

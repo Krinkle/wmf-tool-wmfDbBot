@@ -16,7 +16,13 @@ class wdbExternals {
 		 */
 		$wmfOpsMwConfigRepo = "$wdbPath/externals/wmf-operations-mediawiki-config";
 		$wdbExternals['db.php'] = wdbLoadPhpFile(
-			"$wmfOpsMwConfigRepo/wmf-config/db.php",
+			// TODO: Looks like we can't request replag from the API
+			// for both data centers. Even when forging the Host header
+			// and request with cURL to <project>-lb.pmtpa.wikimedia.org directly
+			// it always responds from eqiad.
+			// So for now only read db-eqiad settings and assume that eqiad is
+			// handling the request.
+			"$wmfOpsMwConfigRepo/wmf-config/db-eqiad.php",
 			array( 'wgLBFactoryConf' ),
 			array( 'wgDBname', 'wgDBuser', 'wgDBpassword' ),
 			array( 'DBO_DEFAULT' )

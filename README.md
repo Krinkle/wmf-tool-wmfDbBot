@@ -10,10 +10,9 @@ wmfDbBot requires PHP 5.3.2 or higher.
    <br>`git clone https://github.com/Krinkle/ts-krinkle-wmfDbBot.git`
 1. Initialize sub modules:
    <br>`git submodule update --init`
-1. Make sure you set the following in `./LocalConfig.php`:
- * `wdbContact`
- * `wdbDefaultSection`
-1. Create an `./externals/` and `./logs/` directory
+1. Make sure you set the `wdbContact` and `wdbDefaultSection`:
+   <br>`cp LocalConfig.sample.php LocalConfig.php`
+   <br>`edit LocalConfig.php`
 1. Run `php ./maintenance/updateExternals.php`
 
 ## Commands
