@@ -60,7 +60,7 @@ This script fetches the latest version of needed external resources that provide
 
 There is a bridging plugin available for Kribo to get this information available from an IRC bot:
 
-* [wmfDbBot_KriboBridge](https://github.com/Krinkle/ts-krinkle-Kribo-plugins/wmfDbBot_KriboBridge)
+* [wmfDbBot_KriboBridge](https://github.com/Krinkle/ts-krinkle-Kribo-plugins/tree/master/wmfDbBot_KriboBridge)
 
 ## License
 wmfDbBot is available under the [Creative Commons Attribution 3.0 Unported](https://creativecommons.org/licenses/by-sa/3.0/) license.
