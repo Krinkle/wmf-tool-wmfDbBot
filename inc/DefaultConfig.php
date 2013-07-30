@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Timo Tijhof, 2011
+ * @author Timo Tijhof, 2011–2013
  * @since 0.1
  * @package wmfDbBot
  */
@@ -8,7 +8,7 @@
 /**
  * General
  */
-$wdbVersion = '0.4.1';
+$wdbVersion = '0.4.2';
 
 // E-mailadress, right now only used in the user agent for API requests.
 $wdbContact = null;

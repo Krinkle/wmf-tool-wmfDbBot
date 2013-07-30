@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Timo Tijhof, 2011
+ * @author Timo Tijhof, 2011–2013
  * @since 0.1
  * @package wmfDbBot
  */
@@ -36,7 +36,7 @@ function wdbLoadPhpFile( $path, $extractVars = array(),
 
 /**
  * Based on:
- * https://gerrit.wikimedia.org/r/gitweb?p=operations/mediawiki-config.git;a=blob;f=refresh-dblist;h=456e95a2989590b353a8a43330db159d7204c42f;hb=HEAD#l29
+ * https://git.wikimedia.org/blob/operations%2Fmediawiki-config.git/19fd296/refresh-dblist#L41
  */
 function wdbLoadFlatFile( $path ) {
 	// Verify existance

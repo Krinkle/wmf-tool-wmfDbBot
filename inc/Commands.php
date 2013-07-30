@@ -1,6 +1,6 @@
 <?php
 /**
- * @author Timo Tijhof, 2011
+ * @author Timo Tijhof, 2011–2013
  * @since 0.1
  * @package wmfDbBot
  */
@@ -240,7 +240,7 @@ class Commands {
 
 		$msgs[] = chr(2) . "[operations/mediawiki-config.git]" . chr(2)
 			. ' Checked out HEAD: ' . $gitHead
-			. ' - ' . 'https://gerrit.wikimedia.org/r/gitweb?p=operations/mediawiki-config.git;a=commit;h=' . urlencode( $gitHead );
+			. ' - ' . 'https://git.wikimedia.org/commit/operations%2Fmediawiki-config.git/' . urlencode( $gitHead );
 
 		return implode( '; ', $msgs );
 	}
