@@ -212,7 +212,9 @@ function wdbGetInfo( $id ) {
 	} elseif ( isset( $wdbDatabaseInfo['ipToDbhost'][$needle] ) ) {
 
 		$dbhost = $wdbDatabaseInfo['ipToDbhost'][$needle];
-		$section = $wdbDatabaseInfo['dbhostToSection'][$dbhost];
+		$section = isset( $wdbDatabaseInfo['dbhostToSection'][$dbhost] )
+			? $wdbDatabaseInfo['dbhostToSection'][$dbhost]
+			: '?';
 
 		return array(
 			'type'     => 'ip',
