@@ -31,7 +31,7 @@ class Commands {
 		}
 
 		$info = wdbGetInfo( $input );
-		$sectionAnnotated = wdbAnnotateDefaultSection( $info['section'] );
+		$infoLink = wdbAnnotateDefaultSection( $info['section'] );
 
 		switch( $info['type'] ) {
 			case 'section':
@@ -41,12 +41,12 @@ class Commands {
 					$output[] = "$dbhost: {$wdbDatabaseInfo['dbhostToIP'][$dbhost]}";
 				}
 
-				$return = "[$sectionAnnotated] " . join( ', ', $output );
+				$return = join( ', ', $output );
 				break;
 
 			case 'dbhost':
 
-				$return = "[$input: $sectionAnnotated] " . $info['relation'];
+				$return = $info['relation'];
 				break;
 
 			case 'dbname':
@@ -56,19 +56,30 @@ class Commands {
 					$output[] = "$dbhost: {$wdbDatabaseInfo['dbhostToIP'][$dbhost]}";
 				}
 
-				$return = "[$input: $sectionAnnotated] " . join( ', ', $output );
+				$return = join( ', ', $output );
 				break;
 
 			case 'ip':
 
-				$return = "[$input: $sectionAnnotated] " . $info['relation'];
+				$return = $info['relation'];
 				break;
 
 			// case 'unknown':
 			default:
 
-				$return = "Unknown identifier ({$input})";
+				$return = false;
 		}
+
+		if ( $return ) {
+			if ( $input == $infoLink ) {
+				$return = "[$input] $return";
+			} else {
+				$return = "[$input: $infoLink] $return";
+			}
+		} else {
+			$return = "Unknown identifier ({$input})";
+		}
+
 
 		return $return;
 	}
@@ -134,15 +145,24 @@ class Commands {
 		// wmfDbBot: [identifier]
 
 		$info = wdbGetInfo( $input );
-		$sectionAnnotated = wdbAnnotateDefaultSection( $info['section'] );
+		$infoLink = wdbAnnotateDefaultSection( $info['section'] );
 
 		switch( $info['type'] ) {
 			case 'section':
 
-				$replags = getReplagFromSection( $info['section'] );
+				$dbname = wdbDbnameFromSection( $info['section'] );
+				if ( !$dbname ) {
+					$replags = false;
+				} else {
+					$replags = getReplagFromDbname( $dbname );
+				}
+
 				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
+
+				// Show which dbname was used to get the replag
+				$infoLink = $dbname;
 
 				$output = array();
 
@@ -168,31 +188,30 @@ class Commands {
 					}
 				}
 
-				$return = "[$sectionAnnotated] " . join( ', ', $output );
+				$return = join( ', ', $output );
 				break;
 
 			case 'dbhost':
-				$dbhost = $input;
 
-				$replags = getReplagFromDbhost( $dbhost );
+				$ip = $info['relation'];
+
+				$replags = getReplagFromDbhost( $input );
 				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
 
-				$return = "[$dbhost: $sectionAnnotated] $input: " . $replags[$dbhost] . 's';
+				$return = "$ip: " . $replags[$input] . 's';
 				break;
 
 			case 'dbname':
 
-				// Centralauth is not a wiki
 				if ( $input === 'centralauth' ) {
-					// Get centralauth's section
-					$tmp = wdbGetInfo( $input );
-					$replags = getReplagFromSection( $tmp['section'] );
+					// Centralauth is not a valid dbname that has a domain with mwroot,
+					// but we already have its section in $info, so it can be handled transparently at this point
+					$replags = getReplagFromSection( $info['section'] );
 				} else {
 					$replags = getReplagFromDbname( $input );
 				}
-
 				if ( !$replags ) {
 					return 'Could not get replag information.';
 				}
@@ -206,7 +225,7 @@ class Commands {
 					}
 				}
 
-				$return = "[$input: $sectionAnnotated] " . join( ', ', $output );
+				$return = join( ', ', $output );
 				break;
 
 			case 'ip':
@@ -217,16 +236,27 @@ class Commands {
 					return 'Could not get replag information.';
 				}
 
-				$return = "[$dbhost: $sectionAnnotated] $input: " . $replags[$dbhost] . 's';
+				$return = "$dbhost: " . $replags[$dbhost] . 's';
 				break;
 
 			// case 'unknown':
 			default:
-				$return = 'Unknown identifier';
+
+				$return = false;
 		}
 
-		return $return;
+		if ( $return ) {
+			if ( $input == $infoLink ) {
+				$return = "[$input] $return";
+			} else {
+				$return = "[$input: $infoLink] $return";
+			}
+		} else {
+			$return = "Unknown identifier ({$input})";
+		}
 
+
+		return $return;
 	}
 
 	public static function getExternals( $options = array() ) {

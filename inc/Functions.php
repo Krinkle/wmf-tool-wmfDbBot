@@ -261,9 +261,7 @@ function getReplagFromDbhost( $dbhost ) {
 
 // section > (random)dbname > mwroot > api-replag
 function getReplagFromSection( $section ) {
-	global $wdbDatabaseInfo;
-	$dbname = isset( $wdbDatabaseInfo['sectionToWiki'][$section] ) ?
-		$wdbDatabaseInfo['sectionToWiki'][$section] : null;
+	$dbname = wdbDbnameFromSection( $section );
 	if ( $dbname ) {
 		return getReplagFromDbname( $dbname );
 	} else {
@@ -278,6 +276,13 @@ function getReplagFromDbname( $dbname ) {
 		return getReplagFromMWRoot( $mwRoot );
 	}
 	return false;
+}
+
+function wdbDbnameFromSection( $section ) {
+	global $wdbDatabaseInfo;
+	return isset( $wdbDatabaseInfo['sectionToWiki'][$section] ) ?
+		$wdbDatabaseInfo['sectionToWiki'][$section] :
+		false;
 }
 
 function wdbMwRootFromDbname( $dbname ) {
