@@ -181,8 +181,9 @@ function wdbGetInfo( $id ) {
 		$ip =  $wdbDatabaseInfo['dbhostToIP'][$needle];
 
 		$section = '?';
-		foreach( $wdbDatabaseInfo['sectionToDbhosts'] as $section => $dbhosts ) {
+		foreach( $wdbDatabaseInfo['sectionToDbhosts'] as $dbhostSection => $dbhosts ) {
 			if ( in_array( $needle, $dbhosts ) ) {
+				$section = $dbhostSection;
 				break;
 			}
 		}

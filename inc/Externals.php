@@ -150,7 +150,7 @@ class wdbExternals {
 
 			// Populate sectionToWiki
 			// Also continue dbnameToSection: overwrite the non-defaults.
-			foreach( $factoryConf['sectionsByDB'] as $dbname => $section ) {
+			foreach ( $factoryConf['sectionsByDB'] as $dbname => $section ) {
 				$wdbDatabaseInfo['sectionToWiki'][$section] = $dbname;
 				$wdbDatabaseInfo['dbnameToSection'][$dbname] = $section;
 			}
