@@ -167,24 +167,21 @@ class Commands {
 				$output = array();
 
 				foreach ( $info['relation'] as $dbhost ) {
-					// Check whether this is set. We are comparing here:
-					// What we believe are dbhosts belonging to this section
-					// (according to externals' wmf-config/db.php), and the
-					// response of the API. If either has changed since the
-					// last sync, we will have missing or additional keys here.
+					// Check whether this is set. We are comparing what we believe are dbhosts
+					// belonging to this section (according to externals' wmf-config/db.php), and the
+					// response of the API. If either has changed since the last config-sync, we may
+					// be missing dbhosts here.
 					$output[] = isset( $replags[$dbhost] )
 						? "$dbhost: {$replags[$dbhost]}s"
-						: "$dbhost (?): -";
+						: "$dbhost: N/A";
 				}
 
-				// The above outputs ? for dbhosts that were in the section cluster
-				// but are no longer according to api.php
-				// The below outputs additional dbhosts that aren't known yet in db.php
-				// but are outputted in api.php
+				// The above outputs N/A for dbhosts that were missing in the API response.
+				// The below outputs additional dbhosts that aren't known yet in db.php, but
+				// included in the API response
 				foreach ( $replags as $dbhost => $replag ) {
-					// Only output the ones not already output above in $info['relation']
 					if ( !in_array( $dbhost, $info['relation'] ) ) {
-						$output[] = "$dbhost (!): {$replag}s";
+						$output[] = "$dbhost (*): {$replag}s";
 					}
 				}
 
@@ -200,7 +197,11 @@ class Commands {
 					return 'Could not get replag information.';
 				}
 
-				$return = "$ip: " . $replags[$input] . 's';
+				if ( isset( $replags[$input] ) ) {
+					$return = "$ip: {$replags[$input]}s";
+				} else {
+					$return = "$ip: N/A";
+				}
 				break;
 
 			case 'dbname':
@@ -221,7 +222,7 @@ class Commands {
 					if ( isset( $replags[$dbhost] ) ) {
 						$output[] = "$dbhost: {$replags[$dbhost]}s";
 					} else {
-						$output[] = "$dbhost: ?";
+						$output[] = "$dbhost: N/A";
 					}
 				}
 
@@ -236,7 +237,11 @@ class Commands {
 					return 'Could not get replag information.';
 				}
 
-				$return = "$dbhost: " . $replags[$dbhost] . 's';
+				if ( isset( $replags[$dbhost] ) ) {
+					$return = "$dbhost: {$replags[$dbhost]}s";
+				} else {
+					$return = "$dbhost: N/A";
+				}
 				break;
 
 			// case 'unknown':
