@@ -17,14 +17,14 @@ function logLine($msg = '') {
 	file_put_contents( $logFilePath, $msg, FILE_APPEND | LOCK_EX );
 }
 
-logLine( 'Updating externals ...' );
+logLine( 'Updating externals...' );
 
 
 /**
  * operations/mediawiki-config.git
  */
 $extName = 'wmf-operations-mediawiki-config';
-logLine( "$extName:" );
+logLine( "$extName: Pull from git remote..." );
 
 chdir( $wdbPath . '/externals/' . $extName );
 foreach( array(
