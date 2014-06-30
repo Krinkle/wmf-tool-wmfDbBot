@@ -9,7 +9,7 @@
 
 class Maintenance {
 	public static function readlineEmulation( $prompt ) {
-		// Fallback... 
+		// Fallback
 		if ( feof( STDIN ) ) {
 			return false;
 		}

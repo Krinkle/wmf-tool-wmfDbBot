@@ -55,16 +55,16 @@ class wdbExternals {
 				$requestFail = true;
 				print $printPrefix . "Invalid response\n";
 				foreach ( $dbListChunk as $db ) {
-					$wdbExternals['toolserver.wiki'][$db] = false;
+					$wdbExternals['wikiinfo'][$db] = false;
 				}
 			} else {
-				$apiData = json_decode( $apiResponse, /*assoc=*/false );
+				$apiData = json_decode( $apiResponse, /* assocArray = */ false );
 				foreach ( $dbListChunk as $db ) {
 					if ( !isset( $apiData->$db ) || !isset( $apiData->$db->data ) ) {
-						$wdbExternals['toolserver.wiki'][$db] = false;
+						$wdbExternals['wikiinfo'][$db] = false;
 						$errors++;
 					} else {
-						$wdbExternals['toolserver.wiki'][$db] = $apiData->$db->data;
+						$wdbExternals['wikiinfo'][$db] = $apiData->$db->data;
 					}
 				}
 			}
@@ -133,7 +133,6 @@ class wdbExternals {
 					$wdbDatabaseInfo['dbhostToSection'][$dbhost] = $section;
 				}
 			}
-
 
 			// Populate dbhostToIP
 			$wdbDatabaseInfo['dbhostToIP'] = $factoryConf['hostsByName'];

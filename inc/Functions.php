@@ -289,11 +289,11 @@ function wdbDbnameFromSection( $section ) {
 }
 
 function wdbMwRootFromDbname( $dbname ) {
-	$wikidata = wdbGetExternalVar( 'toolserver.wiki', $dbname );
-	if ( !$wikidata ) {
+	$info = wdbGetExternalVar( 'wikiinfo', $dbname );
+	if ( !$info ) {
 		return false;
 	}
-	return "http://{$wikidata->domain}{$wikidata->script_path}";
+	return $info->canonicalserver . $info->scriptpath;
 }
 
 /**
@@ -302,7 +302,7 @@ function wdbMwRootFromDbname( $dbname ) {
  * @param $mwRoot string Url to the wiki root
  * @return array Keys: dbhosts, values: lag in seconds
  */
-function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
+function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w' ) {
 	static $apiQuery = array(
 		'format' => 'json',
 		'action' => 'query',
@@ -310,14 +310,14 @@ function getReplagFromMWRoot( $mwRoot = 'http://meta.wikimedia.org/w/' ) {
 		'siprop' => 'dbrepllag',
 		'sishowalldb' => '1',
 	);
-	$apiUrl = "{$mwRoot}api.php?" . http_build_query( $apiQuery );
+	$apiUrl = "{$mwRoot}/api.php?" . http_build_query( $apiQuery );
 
 	// Get data
 	$apiReturn = wdbSimpleCurlGetContent( $apiUrl );
 	if ( !$apiReturn ) {
 		return 'no: ' . $apiReturn;
 	}
-	$apiResult = json_decode( $apiReturn, /*assoc=*/true );
+	$apiResult = json_decode( $apiReturn, /* assoc = */ true );
 	if ( !$apiResult ) {
 		return 'false: ' . $apiReturn;
 	}

@@ -19,8 +19,8 @@ $wdbContact = null;
 // Server config: Default section name for wikis without a section or in section 'DEFAULT' (e.g. 's3')
 $wdbDefaultSection = null;
 
-// Path to ts-krinkle-getWikiAPI install
-$wdbTsGetWikiAPI = 'http://toolserver.org/~krinkle/getWikiAPI/';
+// Path to wmf-tool-wikiinfo
+$wdbTsGetWikiAPI = 'http://tools.wmflabs.org/wikiinfo/';
 
 /**
  * Config for interface (defaults to st-out)
