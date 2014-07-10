@@ -30,10 +30,10 @@ class wdbExternals {
 		$wdbExternals['all.dblist'] = wdbLoadFlatFile( "$wmfOpsMwConfigRepo/all.dblist" );
 
 		// To be populated later. Wiki data table rows by dbname
-		$wdbExternals['toolserver.wiki'] = array();
+		$wdbExternals['wikiinfo'] = array();
 
 		/**
-		 * Load toolserver.wiki
+		 * Load wikiinfo
 		 */
 		$dbChunkSize = 107;
 		$dbListChunks = array_chunk( $wdbExternals['all.dblist'], $dbChunkSize );
