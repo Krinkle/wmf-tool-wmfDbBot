@@ -50,7 +50,7 @@ class wdbExternals {
 			));
 			$printPrefix = "- (Request " . ($i+1) . "/$chunks): ";
 			print $printPrefix . substr( $apiRequest, 0, 100 ) . "..\n";
-			$apiResponse = file_get_contents( $apiRequest );
+			$apiResponse = wdbSimpleCurlGetContent( $apiRequest );
 			if ( !$apiResponse ) {
 				$requestFail = true;
 				print $printPrefix . "Invalid response\n";
