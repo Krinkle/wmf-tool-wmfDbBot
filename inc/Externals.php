@@ -35,11 +35,11 @@ class wdbExternals {
 		/**
 		 * Load wikiinfo
 		 */
-		$dbChunkSize = 107;
+		$dbChunkSize = 100;
 		$dbListChunks = array_chunk( $wdbExternals['all.dblist'], $dbChunkSize );
 		$chunks = count( $dbListChunks );
 		$wikis = count( $wdbExternals['all.dblist'] );
-		$errors = 0;
+		$missing = array();
 		$requestFail = false;
 		print 'Initializing GetWikiAPI external data for '
 			. "$wikis wikis. Devided into $chunks chunks of up to $dbChunkSize wikis...\n";
@@ -53,7 +53,7 @@ class wdbExternals {
 			$apiResponse = wdbSimpleCurlGetContent( $apiRequest );
 			if ( !$apiResponse ) {
 				$requestFail = true;
-				print $printPrefix . "Invalid response\n";
+				print $printPrefix . "Invalid response from URL $apiRequest\n";
 				foreach ( $dbListChunk as $db ) {
 					$wdbExternals['wikiinfo'][$db] = false;
 				}
@@ -62,15 +62,16 @@ class wdbExternals {
 				foreach ( $dbListChunk as $db ) {
 					if ( !isset( $apiData->$db ) || !isset( $apiData->$db->data ) ) {
 						$wdbExternals['wikiinfo'][$db] = false;
-						$errors++;
+						$missing[] = $db;
 					} else {
 						$wdbExternals['wikiinfo'][$db] = $apiData->$db->data;
 					}
 				}
 			}
 		}
-		if ( $errors ) {
-			print "The API failed to give valid data for $errors of $wikis wiki identifiers.\n";
+		if ( $missing ) {
+			print 'The WikiInfo API did not recognize ' . count( $missing ) . " wiki identifiers:\n";
+			print join( ', ', $missing ) . "\n";
 		}
 		print "Finished initializing GetWikiAPI data\n";
 

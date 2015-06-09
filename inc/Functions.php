@@ -238,8 +238,6 @@ function wdbGetInfo( $id ) {
 function wdbSimpleCurlGetContent( $url ) {
 	global $wdbUserAgent;
 
-	print "wdbSimpleCurlGetContent: $url\n";
-
 	$ch = curl_init();
 	curl_setopt_array( $ch, array(
 		CURLOPT_RETURNTRANSFER => 1,
