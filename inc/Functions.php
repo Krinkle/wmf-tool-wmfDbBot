@@ -240,9 +240,10 @@ function wdbSimpleCurlGetContent( $url ) {
 
 	$ch = curl_init();
 	curl_setopt_array( $ch, array(
-		CURLOPT_RETURNTRANSFER => 1,
-		CURLOPT_USERAGENT => $wdbUserAgent,
 		CURLOPT_URL => $url,
+		CURLOPT_USERAGENT => $wdbUserAgent,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_RETURNTRANSFER => 1,
 	) );
 	$raw = curl_exec( $ch );
 
